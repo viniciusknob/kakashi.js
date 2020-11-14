@@ -1,0 +1,21 @@
+{
+  "name": "kakashi",
+  "version": "1.0.0",
+  "description": "A Web Scraping for Financial things",
+  "main": "kakashi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viniciusknob/kakashi.js.git"
+  },
+  "author": "Vinícius Knob <knob.vinicius@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/viniciusknob/kakashi.js/issues"
+  },
+  "homepage": "https://github.com/viniciusknob/kakashi.js#readme",
+  "devDependencies": {
+  }
+}
