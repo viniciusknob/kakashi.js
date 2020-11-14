@@ -5,6 +5,6 @@
 // @author       Vinícius M. Knob <knob.vinicius@gmail.com>
 // @source       https://github.com/viniciusknob/kakashi.js
 // @match        
-// @require      https://raw.githubusercontent.com/viniciusknob/kakashi.js/main/kakashi.js
+// @require      https://raw.githubusercontent.com/viniciusknob/kakashi.js/main/dist/kakashi.min.js
 // @grant        none
 // ==/UserScript==
