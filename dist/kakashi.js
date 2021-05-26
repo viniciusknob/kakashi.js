@@ -251,6 +251,143 @@
 
     'use strict';
 
+    const _Style = function() {
+
+        const CSS = '.fab-container{position:fixed;bottom:50px;right:50px;z-index:999;cursor:pointer}.fab-icon-holder{width:50px;height:50px;border-radius:100%;background:#f58634;box-shadow:0 6px 20px rgba(0,0,0,.2)}.fab-image-holder{background-image:url(https://imgur.com/nbL1mka.png);background-size:58px;background-repeat:no-repeat;background-position:top}.fab-icon-holder:hover{opacity:.8}.fab-icon-holder i{display:flex;align-items:center;justify-content:center;height:100%;font-size:25px;color:#fff}.fab{width:60px;height:60px;background-color:#3e4095}.fab-options{list-style-type:none;margin:0;position:absolute;bottom:70px;right:0;opacity:0;transition:all .3s ease;transform:scale(0);transform-origin:85% bottom}.fab-options:hover,.fab:hover+.fab-options{opacity:1;transform:scale(1)}.fab-options li{display:flex;justify-content:flex-end;padding:5px}.fab-label{padding:2px 5px;align-self:center;user-select:none;white-space:nowrap;border-radius:3px;font-size:16px;background:#666;color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.2);margin-right:10px}#snackbar{visibility:hidden;opacity:0;min-width:250px;margin-left:-125px;background-color:#3e4095;color:#fff;text-align:center;border-radius:2px;padding:16px;position:fixed;z-index:99999;left:50%;bottom:25%;font-size:17px}#snackbar.show{visibility:visible;opacity:1;-webkit-animation:fadein .5s,fadeout .5s 2.5s;animation:fadein .5s,fadeout .5s 2.5s}@-webkit-keyframes fadein{from{bottom:0;opacity:0}to{bottom:25%;opacity:1}}@keyframes fadein{from{bottom:0;opacity:0}to{bottom:25%;opacity:1}}@-webkit-keyframes fadeout{from{bottom:25%;opacity:1}to{bottom:0;opacity:0}}@keyframes fadeout{from{bottom:25%;opacity:1}to{bottom:0;opacity:0}}';
+
+        const
+            _addMaterialIconsToPage = () => {
+                let link = document.createElement('link');
+                link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css';
+                link.rel = 'stylesheet';
+
+                document.head.appendChild(link);
+            },
+            _addCustomCSSToPage = () => {
+                let style = document.createElement('style');
+                style.innerHTML = CSS;
+
+                document.head.appendChild(style);
+            },
+            _inject = () => {
+                _addMaterialIconsToPage();
+                _addCustomCSSToPage();
+            };
+
+        return {
+            inject: _inject,
+        };
+    }();
+
+    /* Module Definition */
+
+    Kakashi.modules.Style = _Style;
+
+})(window.Kakashi);
+(function(Kakashi) {
+
+    'use strict';
+
+    const _Snackbar = function() {
+
+        const
+            SHOW_CLASS = 'show',
+            $ = document.querySelector.bind(document),
+            _fire = message => {
+                let x = $('#snackbar');
+                
+                if (!!!x) {
+                    x = document.createElement('div');
+                    x.id = 'snackbar';
+                    $('body').appendChild(x);
+                }
+
+                x.textContent = message;
+
+                x.classList.add(SHOW_CLASS);
+                setTimeout(() => { x.classList.remove(SHOW_CLASS) }, 2850);
+            };
+
+        return {
+            fire: _fire,
+        };
+    }();
+
+    /* Module Definition */
+
+    Kakashi.modules.Snackbar = _Snackbar;
+
+})(window.Kakashi);
+// https://stackoverflow.com/questions/29209244/css-floating-action-button
+
+(function(Kakashi) {
+
+    'use strict';
+
+    const _FAB = function() {
+
+        const
+            _buildIconHolder = iconClass => {
+                let icon_holder = document.createElement('div');
+                icon_holder.classList.add('fab-icon-holder');
+
+                if (iconClass) {
+                    let i = document.createElement('i');
+                    i.classList.add('fas', iconClass);
+                    icon_holder.appendChild(i);
+                }
+                else {
+                    icon_holder.classList.add('fab','fab-image-holder');
+                }
+
+                return icon_holder;
+            },
+            _buildLabel = textLabel => {
+                let label = document.createElement('span');
+                label.classList.add('fab-label');
+                label.textContent = textLabel;
+
+                return label;
+            },
+            _buildItem = options => {
+                let item = document.createElement('li');
+
+                item.appendChild(_buildLabel(options.textLabel));
+                item.appendChild(_buildIconHolder(options.iconClass));
+                item.onclick = options.click;
+
+                return item;
+            },
+            _buildFabAndAddToPage = optionsArr => {
+                let fab = document.createElement('div');
+                fab.classList.add('fab-container');
+                
+                let ul = document.createElement('ul');
+                ul.classList.add('fab-options');
+
+                optionsArr.forEach(options => {
+                    ul.appendChild(_buildItem(options));
+                });
+
+                fab.appendChild(_buildIconHolder());
+                fab.appendChild(ul);
+
+                document.body.appendChild(fab);
+            };
+
+        return {
+            build: _buildFabAndAddToPage,
+        };
+    }();
+
+    Kakashi.modules.FAB = _FAB;
+    
+})(window.Kakashi);
+
+(function(Kakashi) {
+
+    'use strict';
+
     const {
 		IndexedDB,
 		Notification,
@@ -464,15 +601,120 @@
 })(window.Kakashi);
 
 (function(Kakashi) {
+
+    'use strict';
+
+    const {
+        Style,
+		Snackbar,
+        FAB,
+    
+    } = Kakashi.modules;
+	
+    const _Avenue = function() {
+
+        const 
+            HOST = /pit\.avenue\.us/,
+
+            REPORTS_STATEMENT_US = /reports\/statement-us/;
+
+            const
+                $ = document.querySelector.bind(document),
+                __copyEarnings_reportStatementUs_onclick = function() {
+                    const 
+                        _table = $('table.ui.striped.very.basic.table'),
+                        _lines = _table.querySelectorAll('tbody tr'),
+                        _defineType = desc => {
+                            if (/Impostos.+tax/.test(desc))
+                                return 'T';
+        
+                            if (/Dividendos.+dividend/.test(desc))
+                                return 'D';
+                            
+                            throw new Error(`not supported: ${desc}`);
+                        },
+                        _items = Array.from(_lines)
+                            .map(tr => {
+                                try {
+                                    const tdList = tr.querySelectorAll('td');
+                                    if (tdList.length === 1) {
+                                        const td = tdList[0];
+                                        return {
+                                            date: td.textContent,
+                                        };
+                                    }
+                                    else {
+                                        const desc = tdList[2].textContent;
+                                        const type = _defineType(desc);
+                                        return {
+                                            date: '',
+                                            asset: desc.match(/\.\s(\w+)\s/)[1],
+                                            type,
+                                            value: tdList[3].textContent.match(/\d+,\d+/)[0],
+                                        };
+                                    }
+                                } catch(e) {
+                                    return;
+                                }
+                            })
+                            .filter(item => !!item)
+                            .map((item,idx,arr) => {
+                                if (item.date.length === 0) {
+                                    item.date = arr[idx-1].date;
+                                }
+                                return item;
+                            })
+                            .filter(item => !!item.asset)
+                            .map(item => {
+                                return [item.date, item.asset, item.type, item.value].join('\t');
+                            })
+                            .reduce((acc,item) => acc.concat(`${acc.length ? '\n' : ''}${item}`));
+                            
+                    navigator.clipboard.writeText(_items)
+                        .then(() => {
+                            Snackbar.fire('Copiado!');
+                        });
+                },
+                _match = function(location) {
+                    return HOST.test(location.host);
+                },
+                _init = function() {
+                    if (REPORTS_STATEMENT_US.test(location.pathname)) {
+                        Style.inject();
+                        FAB.build([
+                            {
+                                textLabel: 'Copiar Proventos/Taxes',
+                                iconClass: 'fa-copy',
+                                click: __copyEarnings_reportStatementUs_onclick,
+                            }
+                        ]);
+                    }
+                };
+
+        return {
+            match: _match,
+            init: _init,
+        };
+    }();
+
+    Kakashi.modules.Avenue = _Avenue;
+    
+})(window.Kakashi);
+
+(function(Kakashi) {
 	
 	'use strict';
 
 	const {
 		StatusInvest,
+		Avenue,
 	
 	} = Kakashi.modules;
 
 	if (StatusInvest.match(window.location))
 		StatusInvest.init();
+	
+	if (Avenue.match(window.location))
+		Avenue.init();
 	
 })(window.Kakashi);
