@@ -13,11 +13,10 @@
 
                 if (iconClass) {
                     let i = document.createElement('i');
-                    i.classList.add('fas', iconClass);
+                    i.classList.add(...iconClass.split(' '));
                     icon_holder.appendChild(i);
-                }
-                else {
-                    icon_holder.classList.add('fab','fab-image-holder');
+                } else {
+                    icon_holder.classList.add('fab-main', 'fab-image-holder');
                 }
 
                 return icon_holder;
@@ -26,7 +25,6 @@
                 let label = document.createElement('span');
                 label.classList.add('fab-label');
                 label.textContent = textLabel;
-
                 return label;
             },
             _buildItem = options => {
