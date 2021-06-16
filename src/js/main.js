@@ -5,13 +5,15 @@
 	const {
 		StatusInvest,
 		Avenue,
+		Clear,
 	
 	} = Kakashi.modules;
 
-	if (StatusInvest.match(window.location))
-		StatusInvest.init();
-	
-	if (Avenue.match(window.location))
-		Avenue.init();
+	[
+		StatusInvest,
+		Avenue,
+		Clear,
+	]
+	.map(mod => mod.match(window.location) && mod.init());
 
 })(window.Kakashi);

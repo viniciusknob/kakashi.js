@@ -62,7 +62,8 @@ function _jsConcat() {
             'src/js/modal.js',
             'src/js/statusinvest.js',
             'src/js/avenue.js',
-            'src/js/main.js'
+            'src/js/clear.js',
+            'src/js/main.js',
         ])
         .pipe(jsConcat('kakashi.js'))
         .pipe(dest(`${BUILD_PATH}/js`));
