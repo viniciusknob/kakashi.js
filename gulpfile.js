@@ -63,6 +63,7 @@ function _jsConcat() {
             'src/js/statusinvest.js',
             'src/js/avenue.js',
             'src/js/clear.js',
+            'src/js/tesourodireto.js',
             'src/js/main.js',
         ])
         .pipe(jsConcat('kakashi.js'))

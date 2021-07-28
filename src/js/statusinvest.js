@@ -28,6 +28,8 @@
         const
             $ = document.querySelector.bind(document),
             _buildStock = doc => {
+                doc = doc || document;
+
                 let stock = {
                     ticker: '',
                     company: {

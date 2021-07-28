@@ -43,7 +43,7 @@
                         // build final object
                         return [
                             item.date,
-                            item.desc.match(/[A-Z]{4}\d{1,2}$/)[ 0 ],
+                            item.desc.match(/[A-Z0-9]{4}\d{1,2}$/)[ 0 ],
                             item.desc.substring(0, 1),
                             item.value,
                         ].join('\t');
